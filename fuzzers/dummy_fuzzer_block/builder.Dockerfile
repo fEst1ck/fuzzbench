@@ -76,7 +76,7 @@ RUN git clone https://github.com/fEst1ck/dummy-fuzzer && \
     cargo build --release && \
     cp target/release/dummy-fuzzer /dummy-fuzzer
 
-RUN wget https://raw.githubusercontent.com/llvm/llvm-project/5feb80e748924606531ba28c97fe65145c65372e/compiler-rt/lib/fuzzer/standalone/StandaloneFuzzTargetMain.c -O /StandaloneFuzzTargetMain.c && \
-    clang -O2 -c /StandaloneFuzzTargetMain.c && \
-    ar rc /libStandaloneFuzzTarget.a StandaloneFuzzTargetMain.o && \
-    rm /StandaloneFuzzTargetMain.c
+COPY FuzzTarget.c /FuzzTarget.c
+RUN clang -O2 -c /FuzzTarget.c && \
+    ar rc /libStandaloneFuzzTarget.a FuzzTarget.o && \
+    rm /FuzzTarget.c
