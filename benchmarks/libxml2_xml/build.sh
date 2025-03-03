@@ -27,7 +27,7 @@ export V=1
     --without-http \
     --without-legacy \
     --without-python
-make -j$(nproc)
+make
 
 cd fuzz
 make clean-corpus
