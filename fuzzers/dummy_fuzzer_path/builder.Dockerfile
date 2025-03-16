@@ -58,7 +58,7 @@ RUN git clone https://github.com/fEst1ck/path-cov-instr.git && \
 # Install path-cov for path reduction
 RUN git clone https://github.com/fEst1ck/path-cov.git && \
     cd path-cov && \
-    git checkout 920771af18864241d7110c7c7bbc3f2e23ee3425
+    git checkout 5efd1937b8941d1e9ae6845ad601d4f038ede067
 
 # Uninstall old Rust
 RUN if which rustup; then rustup self uninstall -y; fi
