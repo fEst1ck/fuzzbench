@@ -1,7 +1,7 @@
 import subprocess
 import os
 import sys
-
+import shutil
 if len(sys.argv) != 2:
     print("Usage: python copy_from_container.py <container_id_or_name>")
     sys.exit(1)
@@ -21,9 +21,14 @@ items_to_copy = [
 
 for item in items_to_copy:
     dest_path = os.path.join(output_dir, os.path.basename(item))
+    # Ensure we remove the existing dest directory or file
+    if os.path.exists(dest_path):
+        if os.path.isdir(dest_path):
+            shutil.rmtree(dest_path)
+        else:
+            os.remove(dest_path)
     copy_cmd = [
         "docker", "cp",
-        "--force",
         f"{container_name}:{item}",
         dest_path
     ]
