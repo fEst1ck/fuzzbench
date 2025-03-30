@@ -23,6 +23,7 @@ for item in items_to_copy:
     dest_path = os.path.join(output_dir, os.path.basename(item))
     copy_cmd = [
         "docker", "cp",
+        "--force",
         f"{container_name}:{item}",
         dest_path
     ]
