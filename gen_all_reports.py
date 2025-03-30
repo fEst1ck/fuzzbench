@@ -19,7 +19,7 @@ def generate_all_reports(output_dir="output"):
         print(f"📊 Generating report for: {container_name}")
         try:
             subprocess.run(
-                ["python", "generate_html_report.py", container_name, output_dir],
+                ["python3", "gen_report.py", container_name, output_dir],
                 check=True
             )
         except subprocess.CalledProcessError as e:
