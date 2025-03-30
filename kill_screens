@@ -1,0 +1,1 @@
+for s in $(screen -ls | grep -o '[0-9]*\.[^ ]*'); do screen -S "$s" -X quit; done
