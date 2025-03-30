@@ -72,7 +72,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Install the dummy fuzzer
 RUN git clone https://github.com/fEst1ck/dummy-fuzzer && \
     cd dummy-fuzzer && \
-    git checkout ca4f1bc8e41db426f376ce2313c5602fb3a54d1c && \
+    git checkout a2bb781bb997af7765fa2ec29d0df7d0e05b45fc && \
     cargo build --release && \
     cp target/release/dummy-fuzzer /dummy-fuzzer
 
