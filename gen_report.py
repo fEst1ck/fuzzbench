@@ -17,7 +17,7 @@ def plot_metric(x, y, title, ylabel, filename):
 
 def generate_report(container_name, output_dir):
     container_dir = os.path.join(output_dir, container_name)
-    stats_path = os.path.join(container_dir, "stats", "stats.json")
+    stats_path = os.path.join(container_dir, "stats", "fuzzer_log.json")
     cmd_path = os.path.join(container_dir, "command.txt")
     report_path = os.path.join(container_dir, "report.html")
 
