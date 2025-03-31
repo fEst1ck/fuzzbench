@@ -17,7 +17,7 @@ def plot_metric(x, y, title, ylabel, filename):
 
 def generate_report(container_name, output_dir):
     container_dir = os.path.join(output_dir, container_name)
-    stats_path = os.path.join(container_dir, "stats", "fuzzer_log.json")
+    stats_path = os.path.join(container_dir, "stats", "stats.json")
     cmd_path = os.path.join(container_dir, "command.txt")
     report_path = os.path.join(container_dir, "report.html")
 
@@ -44,6 +44,21 @@ def generate_report(container_name, output_dir):
     queue_size = [entry["queue_size"] for entry in stats]
     crash_count = [entry["crash_count"] for entry in stats]
 
+    # Final state
+    final = stats[-1]
+    final_state_html = f"""
+    <h2>Final Fuzzer State</h2>
+    <ul>
+        <li><strong>Runtime:</strong> {final['runtime_seconds']} seconds</li>
+        <li><strong>Total Executions:</strong> {final['total_executions']}</li>
+        <li><strong>Queue Size:</strong> {final['queue_size']}</li>
+        <li><strong>Crashes:</strong> {final['crash_count']}</li>
+        <li><strong>Block Coverage:</strong> {final['coverage_count']['block']}</li>
+        <li><strong>Edge Coverage:</strong> {final['coverage_count']['edge']}</li>
+        <li><strong>Path Coverage:</strong> {final['coverage_count']['path']}</li>
+    </ul>
+    """
+
     # Plot files
     plots = []
     def save_plot(data, title, ylabel, name):
@@ -64,6 +79,7 @@ def generate_report(container_name, output_dir):
         f.write(f"<h1>Fuzzing Report: {container_name}</h1>")
         f.write(f"<p><strong>Fuzzing command:</strong> <code>{command}</code></p>")
         f.write(f"<p><strong>Generated:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>")
+        f.write(final_state_html)
         for title, img_file in plots:
             f.write(f"<h2>{title}</h2>")
             f.write(f"<img src='{img_file}' style='max-width:800px'><br><br>")
