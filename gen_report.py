@@ -15,14 +15,15 @@ def plot_metric(x, y, title, ylabel, filename):
     plt.savefig(filename)
     plt.close()
 
-def generate_report(container_name, output_dir):
+def generate_instance_report(container_name, instance_name, output_dir):
     container_dir = os.path.join(output_dir, container_name)
-    stats_path = os.path.join(container_dir, "stats", "fuzzer_log.json")
-    cmd_path = os.path.join(container_dir, "command.txt")
-    report_path = os.path.join(container_dir, "report.html")
+    instance_dir = os.path.join(container_dir, instance_name)
+    stats_path = os.path.join(instance_dir, "stats", "fuzzer_log.json")
+    cmd_path = os.path.join(instance_dir, "command.txt")
+    report_path = os.path.join(instance_dir, "report.html")
 
     if not os.path.exists(stats_path):
-        print(f"[!] Stats not found for {container_name}")
+        print(f"[!] Stats not found for {container_name}/{instance_name}")
         return
 
     # Load stats JSON
@@ -62,7 +63,7 @@ def generate_report(container_name, output_dir):
     # Plot files
     plots = []
     def save_plot(data, title, ylabel, name):
-        filename = os.path.join(container_dir, f"{name}.png")
+        filename = os.path.join(instance_dir, f"{name}.png")
         plot_metric(time, data, title, ylabel, filename)
         plots.append((title, os.path.basename(filename)))
 
@@ -75,8 +76,8 @@ def generate_report(container_name, output_dir):
 
     # Write HTML
     with open(report_path, "w") as f:
-        f.write(f"<html><head><title>Fuzzing Report: {container_name}</title></head><body>")
-        f.write(f"<h1>Fuzzing Report: {container_name}</h1>")
+        f.write(f"<html><head><title>Fuzzing Report: {container_name}/{instance_name}</title></head><body>")
+        f.write(f"<h1>Fuzzing Report: {container_name}/{instance_name}</h1>")
         f.write(f"<p><strong>Fuzzing command:</strong> <code>{command}</code></p>")
         f.write(f"<p><strong>Generated:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>")
         f.write(final_state_html)
@@ -86,6 +87,27 @@ def generate_report(container_name, output_dir):
         f.write("</body></html>")
 
     print(f"[✓] Report generated: {report_path}")
+
+def generate_report(container_name, output_dir):
+    container_dir = os.path.join(output_dir, container_name)
+    if not os.path.exists(container_dir):
+        print(f"[!] Container directory '{container_dir}' does not exist.")
+        return
+
+    # Find all instance directories
+    instances = [
+        d for d in os.listdir(container_dir)
+        if os.path.isdir(os.path.join(container_dir, d)) and d.startswith("instance_")
+    ]
+
+    if not instances:
+        print(f"[!] No instance directories found in {container_dir}")
+        return
+
+    # Generate report for each instance
+    for instance in instances:
+        print(f"📊 Generating report for: {container_name}/{instance}")
+        generate_instance_report(container_name, instance, output_dir)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
