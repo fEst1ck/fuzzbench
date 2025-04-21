@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from datetime import datetime
 
@@ -41,6 +43,7 @@ def generate_instance_report(container_name, instance_name, output_dir):
     coverage_block = [entry["coverage_count"]["block"] for entry in stats]
     coverage_edge = [entry["coverage_count"]["edge"] for entry in stats]
     coverage_path = [entry["coverage_count"]["path"] for entry in stats]
+    coverage_pfp = [entry["coverage_count"]["pfp"] for entry in stats]
     executions = [entry["total_executions"] for entry in stats]
     queue_size = [entry["queue_size"] for entry in stats]
     crash_count = [entry["crash_count"] for entry in stats]
@@ -57,6 +60,7 @@ def generate_instance_report(container_name, instance_name, output_dir):
         <li><strong>Block Coverage:</strong> {final['coverage_count']['block']}</li>
         <li><strong>Edge Coverage:</strong> {final['coverage_count']['edge']}</li>
         <li><strong>Path Coverage:</strong> {final['coverage_count']['path']}</li>
+        <li><strong>PFP Coverage:</strong> {final['coverage_count']['pfp']}</li>
     </ul>
     """
 
@@ -70,6 +74,7 @@ def generate_instance_report(container_name, instance_name, output_dir):
     save_plot(coverage_block, "Block Coverage Over Time", "Block Coverage", "block_coverage")
     save_plot(coverage_edge, "Edge Coverage Over Time", "Edge Coverage", "edge_coverage")
     save_plot(coverage_path, "Path Coverage Over Time", "Path Coverage", "path_coverage")
+    save_plot(coverage_pfp, "Path Coverage Over Time", "PFP Coverage", "pfp_coverage")
     save_plot(executions, "Total Executions Over Time", "Executions", "executions")
     save_plot(queue_size, "Queue Size Over Time", "Queue Size", "queue_size")
     save_plot(crash_count, "Crash Count Over Time", "Crash Count", "crash_count")

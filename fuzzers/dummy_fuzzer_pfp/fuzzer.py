@@ -58,6 +58,8 @@ def run_afl_fuzz(input_corpus,
     """Run afl-fuzz."""
     # Spawn the afl fuzzing process.
     print('[run_afl_fuzz] Running target with afl-fuzz')
+    # os.environ["DEBUG"] = "1"
+    # os.environ["RUST_LOG"] = "info"
     command = [
         './dummy-fuzzer',
         '-i',
@@ -67,9 +69,9 @@ def run_afl_fuzz(input_corpus,
         '-j',
         '4',
         '-c',
-        'block,edge,path',
+        'block,edge,path,pfp',
         '-u',
-        'block,edge,path',
+        'pfp',
         '--',
         target_binary,
     ]

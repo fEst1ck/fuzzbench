@@ -47,7 +47,7 @@ RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && 
 # Install path-cov-instr for path coverage instrumentation
 RUN git clone https://github.com/fEst1ck/path-cov-instr.git && \
     cd path-cov-instr && \
-    git checkout 955c1eb5d5697c9796cadabeb70e14587ad27cd7 && \
+    git checkout bbcc506fce667730092a0bd15a0bfb64cb8c90d3 && \
     # export CC=clang-19 CXX=clang++-19 && \
     make && \
     cp libCodeCoveragePass.so /libCodeCoveragePass.so && \
@@ -72,7 +72,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Install the dummy fuzzer
 RUN git clone https://github.com/fEst1ck/dummy-fuzzer && \
     cd dummy-fuzzer && \
-    git checkout a2bb781bb997af7765fa2ec29d0df7d0e05b45fc && \
+    git checkout 9b251ae9d428b6f76101455f061a9667e1f8b2df && \
     cargo build --release && \
     cp target/release/dummy-fuzzer /dummy-fuzzer
 

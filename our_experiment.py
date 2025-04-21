@@ -4,14 +4,19 @@ fuzzers = [
     "block",
     "edge",
     "path",
-    "peb"
+    # "peb",
+    "pfp"
 ]
 
 benchmarks = [
-    "systemd_fuzz-link-parser",
-    "jsoncpp_jsoncpp_fuzzer",
-    "vorbis_decode_fuzzer",
+    #"systemd_fuzz-link-parser",
+    #"systemd_fuzz-link-parser",
+    # "jsoncpp_jsoncpp_fuzzer",
+    # "jsoncpp_jsoncpp_fuzzer",
     "zlib_zlib_uncompress_fuzzer",
+    "libxml2_xml",
+    #"vorbis_decode_fuzzer",
+    #"zlib_zlib_uncompress_fuzzer",
     # "re2_fuzzer",
     # "woff2_convert_woff2ttf_fuzzer",
     # "sqlite3_ossfuzz"
@@ -34,9 +39,10 @@ for fuzzer in fuzzers:
 
         # Wrap the command with taskset to bind it to a single core
         taskset_cmd = f"taskset -c {core_id} bash -c '{shell_cmd}'"
-        screen_cmd = f"screen -dmS {session_name} {taskset_cmd}"
+        # screen_cmd = f"screen -dmS {session_name} {taskset_cmd}"
+        screen_cmd = f"screen -dmS {session_name} bash -c '{shell_cmd}'"
 
-        print(f"Starting screen session: {session_name} on CPU core {core_id}")
+        # print(f"Starting screen session: {session_name} on CPU core {core_id}")
         subprocess.run(screen_cmd, shell=True, check=True)
 
         core_id += 1  # Move to the next CPU core for the next experiment
