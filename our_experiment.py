@@ -3,9 +3,10 @@ import subprocess
 fuzzers = [
     "block",
     "edge",
+    "pfp",
     "path",
     # "peb",
-    "pfp"
+    #"pfp"
 ]
 
 benchmarks = [
