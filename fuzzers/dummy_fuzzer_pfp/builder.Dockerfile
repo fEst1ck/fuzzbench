@@ -47,7 +47,7 @@ RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && 
 # Install path-cov-instr for path coverage instrumentation
 RUN git clone https://github.com/fEst1ck/path-cov-instr.git && \
     cd path-cov-instr && \
-    git checkout bbcc506fce667730092a0bd15a0bfb64cb8c90d3 && \
+    git checkout 0095e75244e2f62a578a621d1e57a14a53faa37d && \
     # export CC=clang-19 CXX=clang++-19 && \
     make && \
     cp libCodeCoveragePass.so /libCodeCoveragePass.so && \
@@ -58,7 +58,7 @@ RUN git clone https://github.com/fEst1ck/path-cov-instr.git && \
 # Install path-cov for path reduction
 RUN git clone https://github.com/fEst1ck/path-cov.git && \
     cd path-cov && \
-    git checkout 5efd1937b8941d1e9ae6845ad601d4f038ede067
+    git checkout 9d8fc8c73d86e63bbec64cdb3cef5608719a88a8
 
 # Uninstall old Rust
 RUN if which rustup; then rustup self uninstall -y; fi
@@ -72,7 +72,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Install the dummy fuzzer
 RUN git clone https://github.com/fEst1ck/dummy-fuzzer && \
     cd dummy-fuzzer && \
-    git checkout 9b251ae9d428b6f76101455f061a9667e1f8b2df && \
+    git checkout bd5da4548795cd767f2e589e9f8d0a8d8418cd95 && \
     cargo build --release && \
     cp target/release/dummy-fuzzer /dummy-fuzzer
 
