@@ -3,8 +3,9 @@ import subprocess
 fuzzers = [
     "block",
     "edge",
-    "pfp",
     "path",
+    "pfp",
+    # "eepp",
     # "peb",
     #"pfp"
 ]
@@ -13,14 +14,16 @@ benchmarks = [
     #"systemd_fuzz-link-parser",
     #"systemd_fuzz-link-parser",
     # "jsoncpp_jsoncpp_fuzzer",
-    # "jsoncpp_jsoncpp_fuzzer",
-    "zlib_zlib_uncompress_fuzzer",
-    "libxml2_xml",
+    #"jsoncpp_jsoncpp_fuzzer",
+    #"zlib_zlib_uncompress_fuzzer",
+    #"libxml2_xml",
     #"vorbis_decode_fuzzer",
     #"zlib_zlib_uncompress_fuzzer",
     # "re2_fuzzer",
     # "woff2_convert_woff2ttf_fuzzer",
     # "sqlite3_ossfuzz"
+    #"libpng_libpng_read_fuzzer",
+    "openh264_decoder_fuzzer",
 ]
 
 core_id = 0  # Start from core 0
