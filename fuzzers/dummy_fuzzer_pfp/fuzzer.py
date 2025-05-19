@@ -71,7 +71,7 @@ def run_afl_fuzz(input_corpus,
         '-c',
         'block,edge,path,pfp',
         '-u',
-        'edge,pfp',
+        'pfp',
         '--',
         target_binary,
     ]

@@ -1,3 +1,4 @@
 cp fuzzers/dummy_fuzzer_path/builder.Dockerfile fuzzers/dummy_fuzzer_edge
 cp fuzzers/dummy_fuzzer_path/builder.Dockerfile fuzzers/dummy_fuzzer_block
 cp fuzzers/dummy_fuzzer_path/builder.Dockerfile fuzzers/dummy_fuzzer_peb
+cp fuzzers/dummy_fuzzer_path/builder.Dockerfile fuzzers/dummy_fuzzer_pfp
