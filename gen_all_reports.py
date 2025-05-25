@@ -33,6 +33,14 @@ def generate_average_report(container_name, output_dir):
         print(f"[!] No instance directories found in {container_dir}")
         return
 
+    # Get command from first instance (they should all be the same)
+    command = "(unknown)"
+    first_instance = instances[0]
+    cmd_path = os.path.join(container_dir, first_instance, "command.txt")
+    if os.path.exists(cmd_path):
+        with open(cmd_path, "r") as f:
+            command = f.read().strip()
+
     # Collect stats from all instances
     all_stats = []
     for instance in instances:
@@ -142,6 +150,7 @@ def generate_average_report(container_name, output_dir):
         f.write(f"<html><head><title>Average Fuzzing Report: {container_name}</title></head><body>")
         f.write(f"<h1>Average Fuzzing Report: {container_name}</h1>")
         f.write(f"<p><strong>Number of instances averaged:</strong> {n_instances}</p>")
+        f.write(f"<p><strong>Fuzzing command:</strong> <code>{command}</code></p>")
         f.write(f"<p><strong>Generated:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>")
         
         # Final state
