@@ -47,7 +47,7 @@ RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && 
 # Install path-cov-instr for path coverage instrumentation
 RUN git clone https://github.com/fEst1ck/path-cov-instr.git && \
     cd path-cov-instr && \
-    git checkout 0095e75244e2f62a578a621d1e57a14a53faa37d && \
+    git checkout 23ea7dbc6d3806a3c155bc3bbb19eb67316592f3 && \
     # export CC=clang-19 CXX=clang++-19 && \
     make && \
     cp libCodeCoveragePass.so /libCodeCoveragePass.so && \
