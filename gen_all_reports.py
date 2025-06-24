@@ -67,6 +67,7 @@ def generate_average_report(container_name, output_dir):
     avg_coverage_edge = np.zeros_like(time_points)
     avg_coverage_path = np.zeros_like(time_points)
     avg_coverage_pfp = np.zeros_like(time_points)
+    avg_coverage_rawpath = np.zeros_like(time_points)
     avg_executions = np.zeros_like(time_points)
     avg_queue_size = np.zeros_like(time_points)
     avg_crash_count = np.zeros_like(time_points)
@@ -79,6 +80,7 @@ def generate_average_report(container_name, output_dir):
             "edge": np.array([entry["coverage_count"]["edge"] for entry in stats]),
             "path": np.array([entry["coverage_count"]["path"] for entry in stats]),
             "pfp": np.array([entry["coverage_count"]["pfp"] for entry in stats]),
+            "rawpath": np.array([entry["coverage_count"]["rawpath"] for entry in stats]),
             "executions": np.array([entry["total_executions"] for entry in stats]),
             "queue_size": np.array([entry["queue_size"] for entry in stats]),
             "crash_count": np.array([entry["crash_count"] for entry in stats])
@@ -126,6 +128,7 @@ def generate_average_report(container_name, output_dir):
     save_plot(avg_coverage_edge, "Average Edge Coverage Over Time", "Edge Coverage", "avg_edge_coverage")
     save_plot(avg_coverage_path, "Average Path Coverage Over Time", "Path Coverage", "avg_path_coverage")
     save_plot(avg_coverage_pfp, "Average PFP Coverage Over Time", "PFP Coverage", "avg_pfp_coverage")
+    save_plot(avg_coverage_rawpath, "Average Raw Path Coverage Over Time", "Raw Path Coverage", "avg_rawpath_coverage")
     save_plot(avg_executions, "Average Total Executions Over Time", "Executions", "avg_executions")
     save_plot(avg_queue_size, "Average Queue Size Over Time", "Queue Size", "avg_queue_size")
     save_plot(avg_crash_count, "Average Crash Count Over Time", "Crash Count", "avg_crash_count")
@@ -140,7 +143,8 @@ def generate_average_report(container_name, output_dir):
             "block": avg_coverage_block[-1],
             "edge": avg_coverage_edge[-1],
             "path": avg_coverage_path[-1],
-            "pfp": avg_coverage_pfp[-1]
+            "pfp": avg_coverage_pfp[-1],
+            "rawpath": avg_coverage_rawpath[-1]
         }
     }
 
@@ -165,6 +169,7 @@ def generate_average_report(container_name, output_dir):
             <li><strong>Edge Coverage:</strong> {:.2f}</li>
             <li><strong>Path Coverage:</strong> {:.2f}</li>
             <li><strong>PFP Coverage:</strong> {:.2f}</li>
+            <li><strong>Raw Path Coverage:</strong> {:.2f}</li>
         </ul>
         """.format(
             final_metrics["runtime_seconds"],
@@ -174,7 +179,8 @@ def generate_average_report(container_name, output_dir):
             final_metrics["coverage_count"]["block"],
             final_metrics["coverage_count"]["edge"],
             final_metrics["coverage_count"]["path"],
-            final_metrics["coverage_count"]["pfp"]
+            final_metrics["coverage_count"]["pfp"],
+            final_metrics["coverage_count"]["rawpath"]
         ))
 
         # Add plots
