@@ -96,6 +96,8 @@ def generate_average_report(container_name, output_dir):
                 avg_coverage_path += interpolated
             elif metric_name == "pfp":
                 avg_coverage_pfp += interpolated
+            elif metric_name == "rawpath":
+                avg_coverage_rawpath += interpolated
             elif metric_name == "executions":
                 avg_executions += interpolated
             elif metric_name == "queue_size":
@@ -109,6 +111,7 @@ def generate_average_report(container_name, output_dir):
     avg_coverage_edge /= n_instances
     avg_coverage_path /= n_instances
     avg_coverage_pfp /= n_instances
+    avg_coverage_rawpath /= n_instances
     avg_executions /= n_instances
     avg_queue_size /= n_instances
     avg_crash_count /= n_instances
