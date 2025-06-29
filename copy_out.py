@@ -1,3 +1,4 @@
+cat copy_out.py
 import subprocess
 import os
 import sys
@@ -16,7 +17,7 @@ os.makedirs(output_dir, exist_ok=True)
 # Files to copy from each instance directory
 files_to_copy = [
     "command.txt",
-    "stats",
+    "stats/fuzzer_log.json",
     "crashes"
 ]
 
@@ -29,6 +30,10 @@ def copy_instance_files(instance_path, dest_base):
     for file_name in files_to_copy:
         src_path = os.path.join(instance_path, file_name)
         dest_path = os.path.join(instance_dest, file_name)
+
+        # Create parent directory for fuzzer_log.json if it doesn't exist
+        if file_name == "stats/fuzzer_log.json":
+            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
         
         # Remove existing destination if it exists
         if os.path.exists(dest_path):
@@ -65,4 +70,3 @@ try:
 except subprocess.CalledProcessError as e:
     print(f"[!] Failed to list instance directories: {e}")
     sys.exit(1)
-
