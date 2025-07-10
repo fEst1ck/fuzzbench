@@ -214,8 +214,9 @@ def generate_all_reports(output_dir="output"):
         print(f"\n📊 Processing container: {container_name}")
         try:
             # Generate individual instance reports
+            result_dir = os.path.join(output_dir, container_name)
             subprocess.run(
-                ["python3", "gen_report.py", container_name, output_dir],
+                ["python3", "gen_report.py", result_dir],
                 check=True
             )
             # Generate average report

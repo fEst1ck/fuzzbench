@@ -17,15 +17,28 @@ def plot_metric(x, y, title, ylabel, filename):
     plt.savefig(filename)
     plt.close()
 
-def generate_instance_report(container_name, instance_name, output_dir):
-    container_dir = os.path.join(output_dir, container_name)
-    instance_dir = os.path.join(container_dir, instance_name)
-    stats_path = os.path.join(instance_dir, "stats", "fuzzer_log.json")
-    cmd_path = os.path.join(instance_dir, "command.txt")
-    report_path = os.path.join(instance_dir, "report.html")
+def generate_instance_report(result_dir, instance_name):
+    # Determine if this is single instance or multi-instance
+    if instance_name is None:
+        # Single instance: stats directly in result directory
+        instance_dir = result_dir
+        stats_path = os.path.join(instance_dir, "stats", "fuzzer_log.json")
+        cmd_path = os.path.join(instance_dir, "command.txt")
+        report_path = os.path.join(instance_dir, "report.html")
+        title = os.path.basename(result_dir)
+    else:
+        # Multi-instance: stats in instance subdirectory
+        instance_dir = os.path.join(result_dir, instance_name)
+        stats_path = os.path.join(instance_dir, "stats", "fuzzer_log.json")
+        cmd_path = os.path.join(instance_dir, "command.txt")
+        report_path = os.path.join(instance_dir, "report.html")
+        title = f"{os.path.basename(result_dir)}/{instance_name}"
 
     if not os.path.exists(stats_path):
-        print(f"[!] Stats not found for {container_name}/{instance_name}")
+        if instance_name is None:
+            print(f"[!] Stats not found for {os.path.basename(result_dir)}")
+        else:
+            print(f"[!] Stats not found for {os.path.basename(result_dir)}/{instance_name}")
         return
 
     # Load stats JSON
@@ -84,8 +97,8 @@ def generate_instance_report(container_name, instance_name, output_dir):
 
     # Write HTML
     with open(report_path, "w") as f:
-        f.write(f"<html><head><title>Fuzzing Report: {container_name}/{instance_name}</title></head><body>")
-        f.write(f"<h1>Fuzzing Report: {container_name}/{instance_name}</h1>")
+        f.write(f"<html><head><title>Fuzzing Report: {result_dir}/{instance_name}</title></head><body>")
+        f.write(f"<h1>Fuzzing Report: {result_dir}/{instance_name}</h1>")
         f.write(f"<p><strong>Fuzzing command:</strong> <code>{command}</code></p>")
         f.write(f"<p><strong>Generated:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>")
         f.write(final_state_html)
@@ -96,32 +109,38 @@ def generate_instance_report(container_name, instance_name, output_dir):
 
     print(f"[✓] Report generated: {report_path}")
 
-def generate_report(container_name, output_dir):
-    container_dir = os.path.join(output_dir, container_name)
-    if not os.path.exists(container_dir):
-        print(f"[!] Container directory '{container_dir}' does not exist.")
+def generate_report(result_dir):
+    if not os.path.exists(result_dir):
+        print(f"[!] Result directory '{result_dir}' does not exist.")
+        sys.exit(1)
+
+    # Check if this is a single instance format (stats directly in result directory)
+    single_instance_stats = os.path.join(result_dir, "stats", "fuzzer_log.json")
+    if os.path.exists(single_instance_stats):
+        print(f"📊 Detected single instance format for: {os.path.basename(result_dir)}")
+        generate_instance_report(result_dir, None)
         return
 
-    # Find all instance directories
+    # Check for multi-instance format
     instances = [
-        d for d in os.listdir(container_dir)
-        if os.path.isdir(os.path.join(container_dir, d)) and d.startswith("instance_")
+        d for d in os.listdir(result_dir)
+        if os.path.isdir(os.path.join(result_dir, d)) and d.startswith("instance_")
     ]
 
     if not instances:
-        print(f"[!] No instance directories found in {container_dir}")
+        print(f"[!] No instance directories found in {result_dir}")
         return
 
     # Generate report for each instance
     for instance in instances:
-        print(f"📊 Generating report for: {container_name}/{instance}")
-        generate_instance_report(container_name, instance, output_dir)
+        print(f"📊 Generating report for: {os.path.basename(result_dir)}/{instance}")
+        generate_instance_report(result_dir, instance)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python generate_html_report.py <container_name> <output_dir>")
+    if len(sys.argv) == 2:
+        # Single instance case: only result_dir provided
+        result_dir = sys.argv[1]
+        generate_report(result_dir)
+    else:
+        print("Usage: gen_report.py <result_dir>")
         sys.exit(1)
-
-    container_name = sys.argv[1]
-    output_dir = sys.argv[2]
-    generate_report(container_name, output_dir)
