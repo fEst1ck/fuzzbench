@@ -17,7 +17,7 @@ os.makedirs(output_dir, exist_ok=True)
 # Files to copy from each instance directory
 files_to_copy = [
     "command.txt",
-    "stats/fuzzer_log.json",
+    "stats/fuzzer_log.json",  # Only copy the fuzzer log JSON file
     "crashes"
 ]
 
@@ -31,6 +31,10 @@ def copy_instance_files(instance_path, dest_base):
         src_path = os.path.join(instance_path, file_name)
         dest_path = os.path.join(instance_dest, file_name)
 
+        # Create parent directory for fuzzer_log.json if it doesn't exist
+        if file_name == "stats/fuzzer_log.json":
+            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        
         # Create parent directory for fuzzer_log.json if it doesn't exist
         if file_name == "stats/fuzzer_log.json":
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
@@ -53,20 +57,22 @@ def copy_instance_files(instance_path, dest_base):
         except subprocess.CalledProcessError as e:
             print(f"[!] Failed to copy {src_path}: {e}")
 
-# Get all instance directories
-list_cmd = ["docker", "exec", container_name, "ls", "/out/corpus"]
-try:
-    result = subprocess.run(list_cmd, capture_output=True, text=True, check=True)
-    instances = [line for line in result.stdout.splitlines() if line.startswith("instance_")]
-    
-    if not instances:
-        print("No instance directories found in /out/corpus")
-        sys.exit(1)
-        
-    for instance in instances:
-        instance_path = os.path.join("/out/corpus", instance)
-        copy_instance_files(instance_path, output_dir)
-        
-except subprocess.CalledProcessError as e:
-    print(f"[!] Failed to list instance directories: {e}")
+# Get list of instance directories from container
+result = subprocess.run(
+    ["docker", "exec", container_name, "ls", "-1", "/"],
+    capture_output=True,
+    text=True,
+    check=True
+)
+instance_dirs = [d for d in result.stdout.splitlines() if d.startswith("instance_")]
+
+if not instance_dirs:
+    print(f"[!] No instance directories found in container {container_name}")
     sys.exit(1)
+
+# Copy files from each instance
+for instance_dir in instance_dirs:
+    copy_instance_files(f"/{instance_dir}", output_dir)
+
+print(f"[✓] Finished copying files from {container_name}")
+
